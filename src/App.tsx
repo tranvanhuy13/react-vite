@@ -11,7 +11,7 @@ type Result = {
   time_seconds: number;
 };
 
-const quizId = "f2133e78-6d5f-4c20-8738-690616a7097a";
+
 
 function App() {
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -20,12 +20,13 @@ function App() {
   const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
   const [result, setResult] = useState<Result | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
+  const [quizId, setQuizId] = useState<string | null>(null);
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/api/questions/get-questions/`)
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.questions);
+        setQuizId(data.quiz_id); // Assuming the API returns a quiz_id
         setSelectedOptions(new Array(data.questions.length).fill(-1));
         setLoading(false);
       })

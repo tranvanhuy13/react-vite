@@ -1,4 +1,7 @@
+
 import React, { useEffect, useState } from "react";
+
+const api_host = "http://localhost:8000";
 
 type Question = {
   question: string;
@@ -11,11 +14,7 @@ type Result = {
   time_seconds: number;
 };
 
-type QuizProps = {
-  token: string;
-};
-
-const Quiz: React.FC<QuizProps> = ({ token }) => {
+const Quiz: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -26,8 +25,8 @@ const Quiz: React.FC<QuizProps> = ({ token }) => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://127.0.0.1:8000/api/questions/get-questions/`, {
-      headers: { Authorization: `Bearer ${token}` }
+    fetch(`${api_host}/api/questions/get-questions/`, {
+      credentials: 'include'
     })
       .then((res) => res.json())
       .then((data) => {
@@ -40,7 +39,7 @@ const Quiz: React.FC<QuizProps> = ({ token }) => {
         console.error("Error fetching questions", err);
         setLoading(false);
       });
-  }, [token]);
+  }, []);
 
   const handleOptionChange = (optionIdx: number) => {
     const updated = [...selectedOptions];
@@ -50,15 +49,15 @@ const Quiz: React.FC<QuizProps> = ({ token }) => {
 
   const submitAnswer = async () => {
     const selected = selectedOptions[currentIndex];
-    if (selected === -1 || !token) return;
+    if (selected === -1) return;
     try {
       setSubmitting(true);
-      await fetch(`http://127.0.0.1:8000/api/questions/${quizId}/validate-question/`, {
+      await fetch(`${api_host}/api/questions/${quizId}/validate-question/`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json"
         },
+        credentials: 'include',
         body: JSON.stringify({ selected_option: selected }),
       });
     } catch (error) {
@@ -79,10 +78,9 @@ const Quiz: React.FC<QuizProps> = ({ token }) => {
 
   const handleSubmit = async () => {
     await submitAnswer();
-    if (!token) return;
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/questions/${quizId}/result/`, {
-        headers: { Authorization: `Bearer ${token}` }
+      const res = await fetch(`${api_host}/api/questions/${quizId}/result/`, {
+        credentials: 'include'
       });
       const data = await res.json();
       setResult(data);

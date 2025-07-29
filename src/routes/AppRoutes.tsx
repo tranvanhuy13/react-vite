@@ -4,27 +4,33 @@ import Login from "../features/auth/Login";
 import Register from "../features/auth/Register";
 import Quiz from "../features/quiz/Quiz";
 
+
+function hasSessionCookie() {
+  return document.cookie.split(';').some(c => c.trim().startsWith('sessionid='));
+}
+
+
 const AppRoutes = () => {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
+  const [isLoggedIn, setIsLoggedIn] = useState(() => hasSessionCookie());
 
   return (
     <Routes>
       <Route
         path="/login"
         element={
-          !token ? <Login onLogin={() => setToken("session")} /> : <Navigate to="/" replace />
+          !isLoggedIn ? <Login onLogin={() => setIsLoggedIn(true)} /> : <Navigate to="/" replace />
         }
       />
       <Route
         path="/register"
         element={
-          !token ? <Register /> : <Navigate to="/" replace />
+          !isLoggedIn ? <Register /> : <Navigate to="/" replace />
         }
       />
       <Route
         path="/"
         element={
-          token ? <Quiz token={token} /> : <Navigate to="/login" replace />
+          isLoggedIn ? <Quiz /> : <Navigate to="/login" replace />
         }
       />
     </Routes>

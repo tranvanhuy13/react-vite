@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "../features/auth/Login";
 import Register from "../features/auth/Register";
+
+
 import Quiz from "../features/quiz/Quiz";
+import Logout from "../features/auth/Logout";
 
 
 function hasSessionCookie() {
@@ -10,15 +13,21 @@ function hasSessionCookie() {
 }
 
 
+
 const AppRoutes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => hasSessionCookie());
+  console.log('localStorage.isLogin:', localStorage.getItem('isLogin'));
+  console.log('document.cookie:', document.cookie);
 
   return (
     <Routes>
       <Route
         path="/login"
         element={
-          !isLoggedIn ? <Login onLogin={() => setIsLoggedIn(true)} /> : <Navigate to="/" replace />
+          !isLoggedIn ? <Login onLogin={() => {
+            localStorage.setItem('isLogin', 'true');
+            setIsLoggedIn(true);
+          }} /> : <Navigate to="/" replace />
         }
       />
       <Route
@@ -32,6 +41,10 @@ const AppRoutes = () => {
         element={
           isLoggedIn ? <Quiz /> : <Navigate to="/login" replace />
         }
+      />
+      <Route
+        path="/logout"
+        element={<Logout />}
       />
     </Routes>
   );

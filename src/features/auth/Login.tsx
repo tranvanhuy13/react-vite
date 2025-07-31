@@ -25,11 +25,16 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       const data = await response.json();
 
       if (!response.ok) {
+        if (response.status === 403) {
+          localStorage.setItem('isLogin', 'false');
+        }
         setError(data.detail || "Login failed");
       } else {
+        localStorage.setItem('isLogin', 'true');
         onLogin(data.username || ""); // Login success
       }
     } catch (err) {
+      localStorage.setItem('isLogin', 'false');
       setError("Network error");
     } finally {
       setLoading(false);

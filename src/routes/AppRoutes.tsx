@@ -8,16 +8,17 @@ import Quiz from "../features/quiz/Quiz";
 import Logout from "../features/auth/Logout";
 
 
-function hasSessionCookie() {
-  return document.cookie.split(';').some(c => c.trim().startsWith('sessionid='));
+
+function getIsLogin() {
+  return localStorage.getItem('isLogin') === 'true';
 }
 
 
 
+
 const AppRoutes = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => hasSessionCookie());
+  const [isLoggedIn, setIsLoggedIn] = useState(() => getIsLogin());
   console.log('localStorage.isLogin:', localStorage.getItem('isLogin'));
-  console.log('document.cookie:', document.cookie);
 
   return (
     <Routes>

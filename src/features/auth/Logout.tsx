@@ -18,6 +18,7 @@ const Logout: React.FC = () => {
       } catch (error) {
         console.error("Logout error:", error);
       } finally {
+        localStorage.setItem('isLogin', 'false');
         navigate("/login", { replace: true });
       }
     };

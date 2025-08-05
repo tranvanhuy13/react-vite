@@ -28,8 +28,22 @@ const Quiz: React.FC = () => {
     fetch(`${api_host}/api/questions/get-questions/`, {
       credentials: 'include'
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then(async (res) => {
+        if (res.status === 403) {
+          setQuestions([]);
+          setQuizId(null);
+          setSelectedOptions([]);
+          setLoading(false);
+          throw new Error('Forbidden: You are not authorized.');
+        }
+        const data = await res.json();
+        if (!data.questions || !Array.isArray(data.questions)) {
+          setQuestions([]);
+          setQuizId(null);
+          setSelectedOptions([]);
+          setLoading(false);
+          throw new Error('No questions found or invalid response.');
+        }
         setQuestions(data.questions);
         setQuizId(data.quiz_id);
         setSelectedOptions(new Array(data.questions.length).fill(-1));
@@ -100,6 +114,10 @@ const Quiz: React.FC = () => {
         <p><strong>Time Taken:</strong> {result.time_seconds} seconds</p>
       </div>
     );
+  }
+
+  if (!questions || questions.length === 0) {
+    return <div style={{ padding: "20px" }}><h2>No questions available or you are not authorized.</h2></div>;
   }
 
   const question = questions[currentIndex];

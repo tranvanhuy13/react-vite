@@ -1,32 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Logout: React.FC = () => {
+const Logout = () => {
   const navigate = useNavigate();
-
   useEffect(() => {
-    const logout = async () => {
-      try {
-        const response = await fetch("http://localhost:8000/api/auth/logout/", {
-          method: "POST",
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          console.error("Logout failed with status:", response.status);
-        }
-      } catch (error) {
-        console.error("Logout error:", error);
-      } finally {
-        localStorage.setItem('isLogin', 'false');
-        navigate("/login", { replace: true });
-      }
-    };
-
-    logout();
+    localStorage.setItem('isLogin', 'false');
+    navigate("/login", { replace: true });
   }, [navigate]);
-
-  return <p>Logging out...</p>;
+  return null;
 };
 
 export default Logout;

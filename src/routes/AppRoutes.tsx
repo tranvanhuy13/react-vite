@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "../features/auth/Login";
 import Register from "../features/auth/Register";
@@ -16,8 +16,17 @@ function getIsLogin() {
 
 
 
+
 const AppRoutes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => getIsLogin());
+  // Sync isLoggedIn with localStorage changes (including from Logout)
+  useEffect(() => {
+    const syncLogin = () => setIsLoggedIn(getIsLogin());
+    window.addEventListener('storage', syncLogin);
+    // Also check on mount in case of direct navigation
+    syncLogin();
+    return () => window.removeEventListener('storage', syncLogin);
+  }, []);
   console.log('localStorage.isLogin:', localStorage.getItem('isLogin'));
 
   return (

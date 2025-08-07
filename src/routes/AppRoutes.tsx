@@ -4,8 +4,10 @@ import Login from "../features/auth/Login";
 import Register from "../features/auth/Register";
 
 
+
 import Quiz from "../features/quiz/Quiz";
 import Logout from "../features/auth/Logout";
+import QuizRanking from "../features/quiz/QuizRanking";
 
 
 
@@ -55,6 +57,10 @@ const AppRoutes = () => {
       <Route
         path="/logout"
         element={<Logout />}
+      />
+      <Route
+        path="/ranking"
+        element={<QuizRanking />}
       />
     </Routes>
   );

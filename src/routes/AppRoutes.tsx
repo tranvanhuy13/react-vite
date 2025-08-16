@@ -7,7 +7,9 @@ import Register from "../features/auth/Register";
 
 import Quiz from "../features/quiz/Quiz";
 import Logout from "../features/auth/Logout";
+
 import QuizRanking from "../features/quiz/QuizRanking";
+import CreateQuestion from "../features/quiz/CreateQuestion";
 
 
 
@@ -61,6 +63,10 @@ const AppRoutes = () => {
       <Route
         path="/ranking"
         element={<QuizRanking />}
+      />
+      <Route
+        path="/create-question"
+        element={<CreateQuestion />}
       />
     </Routes>
   );

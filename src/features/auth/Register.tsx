@@ -8,6 +8,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const [role, setRole] = useState("Student");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -24,10 +25,10 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
     setLoading(true);
     try {
       const res = await fetch("http://localhost:8000/api/auth/register/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password, password2 }),
-    });
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, password2, role }),
+      });
       const data = await res.json();
       if (!res.ok) {
         setError(data.detail || "Registration failed");
@@ -157,9 +158,35 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
               />
             </label>
           </div>
-          {error && (
-            <div style={{ color: '#e74c3c', marginBottom: 14, textAlign: 'center', fontWeight: 500 }}>{error}</div>
-          )}
+          {/* Removed middle error feedback, only show error below role dropdown */}
+            <div style={{ marginBottom: 18 }}>
+              <label style={{ display: 'block', marginBottom: 6, color: '#555', fontWeight: 500 }}>
+                Role
+                <select
+                  value={role}
+                  onChange={e => setRole(e.target.value)}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    border: '1px solid #ccc',
+                    borderRadius: 8,
+                    marginTop: 4,
+                    fontSize: 16,
+                    outline: 'none',
+                    transition: 'border 0.2s',
+                    background: '#fff',
+                    appearance: 'none',
+                  }}
+                >
+                  <option value="Student">Student</option>
+                  <option value="Teacher">Teacher</option>
+                </select>
+              </label>
+            </div>
+            {error && (
+              <div style={{ color: '#e74c3c', marginBottom: 14, textAlign: 'center', fontWeight: 500 }}>{error}</div>
+            )}
           <button
             type="submit"
             disabled={loading}
